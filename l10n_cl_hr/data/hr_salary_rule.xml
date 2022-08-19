@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <record id="hr_struct_1_cl" model="hr.payroll.structure">
+        <field name="name">Codigo del Trabajo Chile</field>
+        <field name="type_id" ref="hr_contract.structure_type_employee"/>
+        <field name="unpaid_work_entry_type_ids" eval="[(4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave'))]"/>
+        <field name="rule_ids" eval="[]"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+
+    <record id="SUBT" model="hr.salary.rule.category">
+        <field name="name">Subtotal</field>
+        <field name="code">SUBT</field>
+    </record>
+    <record id="IMPONIBLE" model="hr.salary.rule.category">
+        <field name="name">Imponible</field>
+        <field name="code">IMPONIBLE</field>
+    </record>
+    <record id="NOIMPO" model="hr.salary.rule.category">
+        <field name="name">No Imponible</field>
+        <field name="code">NOIMPO</field>
+    </record>
+    <record id="PREV" model="hr.salary.rule.category">
+        <field name="name">Prevision</field>
+        <field name="code">PREV</field>
+    </record>
+    <record id="SALUD" model="hr.salary.rule.category">
+        <field name="name">Salud</field>
+        <field name="code">SALUD</field>
+    </record>
+    <record id="DED" model="hr.salary.rule.category">
+        <field name="name">Descuentos</field>
+        <field name="code">DED</field>
+    </record>
+    <record id="ODESC" model="hr.salary.rule.category">
+        <field name="name">Otros descuentos</field>
+        <field name="code">ODESC</field>
+    </record>
+
+
+    <record id="hr_rule_1" model="hr.salary.rule">
+        <field name="name">SUELDO BASE</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">SUELDO</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.wage</field>
+    </record>
+
+    <record id="hr_rule_2" model="hr.salary.rule">
+        <field name="name">AJUSTE LEY SUELDO BASE</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">ALSB</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = payslip.l10n_cl_hr_indicator_id.sueldo_minimo > contract.wage and worked_days.WORK100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round(((payslip.l10n_cl_hr_indicator_id.sueldo_minimo - contract.wage) / 30) * worked_days.WORK100.number_of_days)
+        </field>
+    </record>
+
+    <record id="hr_rule_4" model="hr.salary.rule">
+        <field name="name">HORAS EXTRA ART 32</field>
+        <field name="sequence" eval="4"/>
+        <field name="code">HEX50</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.HEX50 and inputs.HEX50.amount > 0</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round(0.00777777 * contract.wage * inputs.HEX50.amount)</field>
+    </record>
+
+    <record id="hr_rule_6" model="hr.salary.rule">
+        <field name="name">GRATIFICACION LEGAL</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">GRAT</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.l10n_cl_hr_legal_grati is False) and worked_days.WORK100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">GRATI=round(categories.IMPONIBLE * 25 / 100 )
+if (contract.l10n_cl_hr_type == 'empresarial'):
+    result = 0
+elif GRATI > (4.75 * payslip.l10n_cl_hr_indicator_id.sueldo_minimo /12):
+    result = round(4.75 * payslip.l10n_cl_hr_indicator_id.sueldo_minimo / 12)
+else:
+    result = GRATI</field>
+    </record>
+
+    <!--WIP!-->
+    <record id="hr_rule_7" model="hr.salary.rule">
+        <field name="name">BONO DE PRODUCCION</field>
+        <field name="sequence" eval="8"/>
+        <field name="code">PROD</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (inputs.PROD and inputs.PROD.amount > 0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.PROD.amount</field>
+    </record>
+
+    <record id="hr_rule_8" model="hr.salary.rule">
+        <field name="name">COMISIONES</field>
+        <field name="sequence" eval="10"/>
+        <field name="code">COMI</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (inputs.COMI and inputs.COMI.amount > 0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.COMI.amount</field>
+    </record>
+
+    <record id="hr_rule_9" model="hr.salary.rule">
+        <field name="name">SEMANA CORRIDA</field>
+        <field name="sequence" eval="11"/>
+        <field name="code">SEMCOR</field>
+        <field name="category_id" ref="IMPONIBLE"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (inputs.COMI and inputs.COMI.amount > 0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.COMI.amount / payslip.l10n_cl_hr_indicator_id.dias_laborados) * payslip.l10n_cl_hr_indicator_id.dias_feriados</field>
+    </record>
+
+    <record id="hr_rule_11" model="hr.salary.rule">
+        <field name="name">TOTAL IMPONIBLE</field>
+        <field name="sequence" eval="14"/>
+        <field name="code">TOTIM</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round(categories.IMPONIBLE)</field>
+    </record>
+
+    <record id="hr_rule_13" model="hr.salary.rule">
+        <field name="name">COLACION</field>
+        <field name="sequence" eval="15"/>
+        <field name="code">COL</field>
+        <field name="category_id" ref="NOIMPO"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_cl_hr_colacion > 0 and worked_days.WORK100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round((contract.l10n_cl_hr_colacion / 30) * worked_days.WORK100.number_of_days)</field>
+    </record>
+
+    <record id="hr_rule_14" model="hr.salary.rule">
+        <field name="name">MOVILIZACION</field>
+        <field name="sequence" eval="16"/>
+        <field name="code">MOV</field>
+        <field name="category_id" ref="NOIMPO"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_cl_hr_movilizacion > 0 and worked_days.WORK100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round((contract.l10n_cl_hr_movilizacion / 30) * worked_days.WORK100.number_of_days)</field>
+    </record>
+
+    <record id="hr_rule_17" model="hr.salary.rule">
+        <field name="name">TOTAL NO IMPONIBLE</field>
+        <field name="sequence" eval="17"/>
+        <field name="code">TOTNOI</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round(categories.NOIMPO)</field>
+    </record>
+
+    <!--falta-->
+    <record id="hr_rule_18" model="hr.salary.rule">
+        <field name="name">PREVISION</field>
+        <field name="sequence" eval="18"/>
+        <field name="code">PREV</field>
+        <field name="category_id" ref="PREV"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">if contract.afp_id.name == 'CAPITAL':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_capital
+elif contract.afp_id.name == 'CUPRUM':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_cuprum
+elif contract.afp_id.name == 'HABITAT':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_habitat
+elif contract.afp_id.name == 'MODELO':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_modelo
+elif contract.afp_id.name == 'PLANVITAL':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_planvital
+elif contract.afp_id.name == 'PROVIDA':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_provida
+elif contract.afp_id.name == 'UNO':
+    tasa = payslip.l10n_cl_hr_indicator_id.tasa_afp_uno
+else:
+    tasa = 0
+
+if contract.l10n_cl_hr_pension is True:
+    result = 0
+elif contract.l10n_cl_hr_sin_afp is True:
+    result = 0
+elif TOTIM >=round(payslip.l10n_cl_hr_indicator_id.tope_imponible_afp*payslip.l10n_cl_hr_indicator_id.uf):
+    result = round( round(payslip.l10n_cl_hr_indicator_id.tope_imponible_afp*payslip.l10n_cl_hr_indicator_id.uf)*tasa /100)
+else:
+    result = round(round(TOTIM)*tasa /100)</field>
+    </record>
+
+    <record id="hr_rule_26" model="hr.salary.rule">
+        <field name="name">SALUD</field>
+        <field name="sequence" eval="20"/>
+        <field name="code">SALUD</field>
+        <field name="category_id" ref="SALUD"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">salud_base=round(round(TOTIM) * 7 / 100)
+if contract.l10n_cl_hr_isapre_cuenta_propia:
+    result = 0
+elif salud_base >= round((payslip.l10n_cl_hr_indicator_id.tope_imponible_salud*payslip.l10n_cl_hr_indicator_id.tope_imponible_afp/100)*payslip.l10n_cl_hr_indicator_id.uf):
+    result = round((payslip.l10n_cl_hr_indicator_id.tope_imponible_salud*payslip.l10n_cl_hr_indicator_id.tope_imponible_afp/100)*payslip.l10n_cl_hr_indicator_id.uf)
+else:
+    result = salud_base</field>
+    </record>
+
+    <record id="hr_rule_27" model="hr.salary.rule">
+        <field name="name">ADICIONAL ISAPRE</field>
+        <field name="sequence" eval="22"/>
+        <field name="code">ADISA</field>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="category_id" ref="SALUD"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">if contract.isapre_id.name == 'FONASA':
+    result = False
+elif contract.l10n_cl_hr_isapre_cuenta_propia:
+    result = False
+else:
+    result = round(payslip.l10n_cl_hr_indicator_id.uf * contract.l10n_cl_hr_isapre_cotizacion_uf) > round(SALUD)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result =round ((((payslip.l10n_cl_hr_indicator_id.uf / 30) * (worked_days.WORK100.number_of_days)) * contract.l10n_cl_hr_isapre_cotizacion_uf)  - round(SALUD))</field>
+    </record>
+
+    <record id="hr_rule_28" model="hr.salary.rule">
+        <field name="name">ISAPRES X PAGAR</field>
+        <field name="sequence" eval="24"/>
+        <field name="code">COLMENA</field>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="category_id" ref="SUBT"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.isapre_id.name != 'FONASA'</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.SALUD</field>
+    </record>
+
+    <record id="hr_rule_34" model="hr.salary.rule">
+        <field name="name">FONASA</field>
+        <field name="sequence" eval="26"/>
+        <field name="code">FONASA</field>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="category_id" ref="SUBT"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.isapre_id.name == 'FONASA'</field>
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">DFSALUD=round(round(TOTIM)* 7/100)
+if DFSALUD >= round((payslip.l10n_cl_hr_indicator_id.tope_imponible_salud*payslip.l10n_cl_hr_indicator_id.tope_imponible_afp/100)*payslip.l10n_cl_hr_indicator_id.uf):
+    result = round( round((payslip.l10n_cl_hr_indicator_id.tope_imponible_salud*payslip.l10n_cl_hr_indicator_id.tope_imponible_afp/100)*payslip.l10n_cl_hr_indicator_id.uf) * (payslip.l10n_cl_hr_indicator_id.fonasa / 7))
+else:
+    result = round(payslip.l10n_cl_hr_indicator_id.fonasa * round(TOTIM)/100)</field>
+    </record>
+
+
+    <record id="hr_rule_19" model="hr.salary.rule">
+        <field name="name">SEGURO CESANTIA</field>
+        <field name="sequence" eval="28"/>
+        <field name="code">SECE</field>
+        <field name="category_id" ref="PREV"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">if contract.l10n_cl_hr_pension is True:
+    result = 0
+elif contract.l10n_cl_hr_type == 'empresarial':
+    result = 0
+elif contract.l10n_cl_hr_type == 'plazo_fijo':
+    result = 0
+elif TOTIM >=round(payslip.l10n_cl_hr_indicator_id.tope_imponible_seguro_cesantia*payslip.l10n_cl_hr_indicator_id.uf):
+    result =round(payslip.l10n_cl_hr_indicator_id.tope_imponible_seguro_cesantia*payslip.l10n_cl_hr_indicator_id.uf*payslip.l10n_cl_hr_indicator_id.contrato_plazo_indefinido_trabajador/100)
+elif contract.l10n_cl_hr_type == 'plazo_indefinido':
+    result = round(TOTIM*payslip.l10n_cl_hr_indicator_id.contrato_plazo_indefinido_trabajador/100)
+elif contract.l10n_cl_hr_type == 'indefinido':
+    result = round(TOTIM*payslip.l10n_cl_hr_indicator_id.contrato_plazo_indefinido_trabajador_otro/100)
+else:
+    result = 0</field>
+    </record>
+
+    <record id="hr_rule_35" model="hr.salary.rule">
+        <field name="name">TRIBUTABLE</field>
+        <field name="sequence" eval="30"/>
+        <field name="code">TRIBU</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">saludtotal = categories.SALUD
+if (saludtotal > (payslip.l10n_cl_hr_indicator_id.uf*(payslip.l10n_cl_hr_indicator_id.tope_imponible_salud*payslip.l10n_cl_hr_indicator_id.tope_imponible_afp/100))):
+    result = TOTIM - round(payslip.l10n_cl_hr_indicator_id.uf*(payslip.l10n_cl_hr_indicator_id.tope_imponible_salud*payslip.l10n_cl_hr_indicator_id.tope_imponible_afp/100)) - PREV - SECE
+else:
+    result = round(TOTIM - saludtotal - PREV - SECE)</field>
+    </record>
+
+
+    <record id="hr_rule_36" model="hr.salary.rule">
+        <field name="name">IMPUESTO UNICO</field>
+        <field name="sequence" eval="31"/>
+        <field name="code">IMPUNI</field>
+        <field name="category_id" ref="DED"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = TRIBU > payslip.l10n_cl_hr_indicator_id.utm*13.5</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">if payslip.l10n_cl_hr_indicator_id.utm*13.5 > TRIBU:
+    result = 0
+elif payslip.l10n_cl_hr_indicator_id.utm*30 > TRIBU:
+    result = TRIBU*0.04-(payslip.l10n_cl_hr_indicator_id.utm*0.54)
+elif payslip.l10n_cl_hr_indicator_id.utm*50 > TRIBU:
+    result = TRIBU*0.08-(payslip.l10n_cl_hr_indicator_id.utm*1.74)
+elif payslip.l10n_cl_hr_indicator_id.utm*70 > TRIBU:
+    result = TRIBU*0.135-(payslip.l10n_cl_hr_indicator_id.utm*4.49)
+elif payslip.l10n_cl_hr_indicator_id.utm*90 > TRIBU:
+    result = TRIBU*0.23-(payslip.l10n_cl_hr_indicator_id.utm*11.14)
+elif payslip.l10n_cl_hr_indicator_id.utm*120 > TRIBU:
+    result = TRIBU*0.304-(payslip.l10n_cl_hr_indicator_id.utm*17.80)
+elif payslip.l10n_cl_hr_indicator_id.utm*150 > TRIBU:
+    result = TRIBU*0.35-(payslip.l10n_cl_hr_indicator_id.utm*23.92)
+else:
+    result = TRIBU*0.4-(payslip.l10n_cl_hr_indicator_id.utm*30.67)</field>
+    </record>
+
+
+    <record id="hr_rule_38" model="hr.salary.rule">
+        <field name="name">ANTICIPO DE SUELDO</field>
+        <field name="sequence" eval="32"/>
+        <field name="code">ASUE</field>
+        <field name="category_id" ref="ODESC"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.ASUE and inputs.ASUE.amount > 0</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.ASUE.amount</field>
+    </record>
+
+    <record id="hr_rule_38_2" model="hr.salary.rule">
+        <field name="name">PRESTAMOS CCAF</field>
+        <field name="sequence" eval="34"/>
+        <field name="code">PCCAF</field>
+        <field name="category_id" ref="ODESC"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.loan_count > 0</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">loan = employee.loan_ids.filtered(lambda r: r.state == 'open')[0]
+loan_line = loan.line_ids.filtered(lambda r: r.state == 'open')[0]
+result = loan_line.total_amount</field>
+    </record>
+
+    <record id="hr_rule_37" model="hr.salary.rule">
+        <field name="name">TOTAL DESC. LEGALES</field>
+        <field name="sequence" eval="36"/>
+        <field name="code">TODELE</field>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="category_id" ref="SUBT"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round(categories.PREV) +  round(categories.SALUD) +  round(categories.DED)</field>
+    </record>
+
+    <record id="hr_rule_39" model="hr.salary.rule">
+        <field name="name">OTROS DESCUENTOS</field>
+        <field name="sequence" eval="38"/>
+        <field name="code">TOD</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.ODESC</field>
+    </record>
+
+    <record id="hr_rule_41" model="hr.salary.rule">
+        <field name="name">TOTAL DESCUENTOS</field>
+        <field name="sequence" eval="40"/>
+        <field name="code">TDE</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = round(TODELE) + round(TOD)</field>
+    </record>
+
+    <record id="hr_rule_42" model="hr.salary.rule">
+        <field name="name">TOTAL HABERES</field>
+        <field name="sequence" eval="42"/>
+        <field name="code">HAB</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.IMPONIBLE + categories.NOIMPO</field>
+    </record>
+
+    <record id="hr_rule_44" model="hr.salary.rule">
+        <field name="name">ALCANCE LIQUIDO</field>
+        <field name="sequence" eval="44"/>
+        <field name="code">LIQ</field>
+        <field name="category_id" ref="SUBT"/>
+        <field name="struct_id" ref="hr_struct_1_cl"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="active">True</field>
+        <field name="amount_python_compute">result = HAB - TDE</field>
+    </record>
+
+</data>
+</odoo>

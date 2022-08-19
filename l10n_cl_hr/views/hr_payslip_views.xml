@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="hr_payslip_l10n_cl_hr_inherit">
+    <field name="name">hr.payslip.form.l10n_cl_hr.inherit</field>
+    <field name="model">hr.payslip</field>
+    <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+    <field name="arch" type="xml">
+        <field name="contract_id" position="after">
+            <field name="l10n_cl_hr_indicator_id"/>
+        </field>
+    </field>
+</record>
+
+</odoo>

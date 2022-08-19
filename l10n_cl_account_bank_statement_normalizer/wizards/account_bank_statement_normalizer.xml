@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_wizard_account_bank_statement_normalizer" model="ir.ui.view">
+            <field name="name">wizard_account_bank_statement_normalizer.form</field>
+            <field name="model">wizard.account_bank_statement_normalizer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="journal_id" options="{'no_create': True}" />
+                            <field name="statement_to_normalize" filename="name_statement_to_normalize" />
+                            <field name="name_statement_to_normalize" invisible="1" />
+                            <field name="statement_normalized" filename="name_statement_normalized" />
+                            <field name="name_statement_normalized" invisible="1" />
+                        </group>
+                    </group>
+                    <footer>
+                            <button string="Normalizar Archivo" name="create_csv_normalized" type="object" class="btn-primary" />
+                        <button string="Cancelar" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_wizard_account_bank_statement_normalizer" model="ir.actions.act_window">
+            <field name="name">Generar CSV Normalizado</field>
+            <field name="res_model">wizard.account_bank_statement_normalizer</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_wizard_account_bank_statement_normalizer"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_wizard_account_bank_statement_normalizer" name="Normalizador de Extractos" action="action_view_wizard_account_bank_statement_normalizer" parent="account.account_reports_management_menu" sequence="100"/>
+
+    </data>
+</odoo>

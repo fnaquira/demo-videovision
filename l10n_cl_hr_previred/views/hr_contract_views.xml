@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_previred_form_view" model="ir.ui.view">
+        <field name="name">hr.contract.previred.form.view.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_cl_hr_type" position="after">
+                <field name="l10n_cl_pension_system" />
+                <field name="l10n_cl_worker_type" />
+            </field>
+        </field>
+    </record>
+</odoo>

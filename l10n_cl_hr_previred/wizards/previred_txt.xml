@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_wizard_hr_previred" model="ir.ui.view">
+            <field name="name">wizard_hr_previred.form</field>
+            <field name="model">wizard.hr.previred</field>
+            <field name="arch" type="xml">
+                <form>
+                <div>
+                    <p>Se genera el txt a descargar para Previred</p>
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Generar archivo" name="create_previred_txt" type="object" class="btn-primary"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_wizard_hr_previred" model="ir.actions.act_window">
+            <field name="name">Generar txt previred</field>
+            <field name="res_model">wizard.hr.previred</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_wizard_hr_previred"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_wizard_hr_previred" name="Generar txt previred" action="action_view_wizard_hr_previred" parent="hr_payroll.menu_report_payroll" sequence="100"/>
+
+    </data>
+</odoo>

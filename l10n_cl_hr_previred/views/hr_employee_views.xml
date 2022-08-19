@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_previred_form_view" model="ir.ui.view">
+        <field name="name">hr.employee.previred.form.view.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <group>
+                    <field name="last_name" />
+                    <field name="mother_last_name" />
+                    <field name="first_name" />
+                    <field name="name" invisible="1" />
+                </group>
+            </field>
+        </field>
+    </record>
+</odoo>

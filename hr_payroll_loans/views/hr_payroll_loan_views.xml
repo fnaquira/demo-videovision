@@ -1,0 +1,105 @@
+<odoo>
+
+<!--vistas-->
+<record id="view_hr_payroll_loan_tree" model="ir.ui.view">
+    <field name="name">view.hr.payroll.loan.tree</field>
+    <field name="model">hr.payroll.loan</field>
+    <field name="type">tree</field>
+    <field name="mode">primary</field>
+    <field name="priority" eval="16" />
+    <field name="active" eval="True" />
+    <field name="arch" type="xml">
+        <!--<tree string="Prestamos de nominas" decoration-info="state == 'draft'">-->
+		<tree string="Prestamos de planilla">
+            <field name="name"/>
+            <field name="employee_id"/>
+            <!--<field name="company_id" groups="base.group_multi_company"/>
+            <field name="state"/>-->
+        </tree>
+    </field>
+</record>
+
+<record id="view_hr_payroll_loan_form" model="ir.ui.view">
+    <field name="name">view.hr.payroll.loan.form</field>
+    <field name="model">hr.payroll.loan</field>
+    <field name="type">form</field>
+    <field name="mode">primary</field>
+    <field name="priority" eval="16" />
+    <field name="active" eval="True" />
+    <field name="arch" type="xml">
+        <form string="Historial de asistencias form">
+            <header>
+				<button name="fill_lines" states="draft" class="btn-primary" string="Calcular Cuotas" type="object"/>
+                <button name="action_open" states="draft" class="btn-primary" string="Comenzar Préstamo" type="object"/>
+                <button name="action_draft" states="open" class="btn-primary" string="Volver a borrador" type="object"
+					confirm="Al confirmar, se retornarán las cuotas a no pagadas" groups="base.group_no_one"/>
+                <field name="state" widget="statusbar"/>
+            </header>
+            <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+						<field name="employee_id"/>
+                        <!--<field name="workcenter_id" attrs="{ 'readonly': [('state','not in',('draft','in_progress'))] }"/>
+                        <field name="date_from" attrs="{ 'readonly': [('state','not in',('draft'))] }"/>
+                        <field name="date_to" attrs="{ 'readonly': [('state','not in',('draft'))] }"/>-->
+                    </group>
+                    <group>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+				<group>
+					<field name="avg_amount" />
+					<field name="months" />
+					<field name="start_at" />
+				</group>
+                <notebook>
+                    <page string="Cuotas">
+                        <field name="line_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="total_amount"/>
+                                <!--<field name="due_date"/>-->
+                                <field name="state"/>
+                                <field name="payslip_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Observaciones" >
+                        <group>
+                            <field name="notes"/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="action_hr_payroll_loan_act_window" model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="name">Prestamos de nominas</field>
+    <field name="res_model">hr.payroll.loan</field>
+    <field name="view_mode">tree,form</field>
+    <field name="target">current</field>
+    <field name="domain">[]</field>
+    <field name="context">\{}</field>
+    <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+            Presiona para crear un nuevo Prestamos de nominas
+        </p>
+    </field>
+</record>
+
+<menuitem
+    id="menu_hr_payroll_loan"
+    name="Prestamos de nominas"
+    action="action_hr_payroll_loan_act_window"
+    sequence="550"
+    parent="hr_payroll.menu_hr_payroll_global_settings"/>
+
+</odoo>

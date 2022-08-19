@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="hr_payslip_input_type_horas_ext_50" model="hr.payslip.input.type">
+            <field name="code">HEX50</field>
+            <field name="name">HORAS EXTRA ART 32</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+        <record id="hr_payslip_input_type_horas_ext_de" model="hr.payslip.input.type">
+            <field name="code">HEXDE</field>
+            <field name="name">HORAS DESCUENTO</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+        <record id="hr_payslip_input_type_bono_produccion" model="hr.payslip.input.type">
+            <field name="code">PROD</field>
+            <field name="name">BONO DE PRODUCCION</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+         <record id="hr_payslip_input_type_comisiones" model="hr.payslip.input.type">
+            <field name="code">COMI</field>
+            <field name="name">COMISIONES</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+         <record id="hr_payslip_input_type_gratificacion_legal" model="hr.payslip.input.type">
+            <field name="code">GRAT</field>
+            <field name="name">GRATIFICACION LEGAL</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+           <record id="hr_payslip_input_type_aguinaldo" model="hr.payslip.input.type">
+            <field name="code">AGUI</field>
+            <field name="name">AGUINALDO</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+        <record id="hr_payslip_input_type_prestamos" model="hr.payslip.input.type">
+            <field name="code">PREST</field>
+            <field name="name">PRESTAMO EMPRESA</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+        <record id="hr_payslip_input_type_prestamos_ccaf" model="hr.payslip.input.type">
+            <field name="code">PCCAF</field>
+            <field name="name">PRESTAMO CCAF</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+
+        <record id="hr_payslip_input_type_anticipo_sueldo" model="hr.payslip.input.type">
+            <field name="code">ASUE</field>
+            <field name="name">ANTICIPO DE SUELDO</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="struct_ids" eval="[(4, ref('hr_struct_1_cl'))]"/>
+        </record>
+    </data>
+</odoo>

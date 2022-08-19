@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="hr_contract_l10n_cl_hr_inherit">
+    <field name="name">hr.contract.form.l10n_cl_hr.inherit</field>
+    <field name="model">hr.contract</field>
+    <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+    <field name="arch" type="xml">
+        <group name="notes_group" position="before">
+            <group name="l10n_cl_hr_contract" string="Nominas">
+                <field name="l10n_cl_hr_type"/>
+                <field name="l10n_cl_hr_pension"/>
+                <field name="l10n_cl_hr_sin_afp"/>
+                <field name="l10n_cl_hr_sin_afp_sis"/>
+                <field name="afp_id"/>
+                <field name="isapre_id"/>
+                <field name="l10n_cl_hr_isapre_cotizacion_uf"/>
+                <field name="l10n_cl_hr_isapre_fun"/>
+                <field name="l10n_cl_hr_isapre_cuenta_propia"/>
+                <label for="l10n_cl_hr_union_dues"/>
+                <div class="o_row" name="l10n_cl_hr_union_dues">
+                    <field name="l10n_cl_hr_union_dues" nolabel="1"/>
+                    <span>/ mes</span>
+                </div>
+                <field name="l10n_cl_hr_legal_grati"/>
+                <label for="l10n_cl_hr_colacion"/>
+                <div class="o_row" name="l10n_cl_hr_colacion">
+                    <field name="l10n_cl_hr_colacion" nolabel="1"/>
+                    <span>/ mes</span>
+                </div>
+                <label for="l10n_cl_hr_movilizacion"/>
+                <div class="o_row" name="l10n_cl_hr_movilizacion">
+                    <field name="l10n_cl_hr_movilizacion" nolabel="1"/>
+                    <span>/ mes</span>
+                </div>
+            </group>
+        </group>
+    </field>
+</record>
+
+</odoo>

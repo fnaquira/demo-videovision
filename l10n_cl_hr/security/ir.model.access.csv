@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_afp,model.hr_afp,model_hr_afp,hr_payroll.group_hr_payroll_user,1,0,0,0
+access_manager_hr_afp,model.hr_afp,model_hr_afp,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_hr_isapre,model.hr_isapre,model_hr_isapre,hr_payroll.group_hr_payroll_user,1,0,0,0
+access_hr_isapre,model.hr_isapre,model_hr_isapre,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_hr_l10n_cl_hr_indicator,model.hr_l10n_cl_hr_indicator,model_hr_l10n_cl_hr_indicator,hr_payroll.group_hr_payroll_user,1,1,1,1

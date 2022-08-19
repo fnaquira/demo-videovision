@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--record model="ir.ui.view" id="hr_employee_l10n_cl_hr_inherit">
+    <field name="name">hr.employee.form.l10n_cl_hr.inherit</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr.view_employee_form"/>
+    <field name="arch" type="xml">
+        <group name="identification_group" position="before">
+            <group name="l10n_cl_hr_employee" string="Nominas">
+                <field name="afp_id"/>
+            </group>
+        </group>
+    </field>
+</record-->
+
+</odoo>

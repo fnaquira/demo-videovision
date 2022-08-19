@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="workflow_rule_form_view_inherit" model="ir.ui.view">
+		<field name="name">workflow_rule_form_view.ecert.form</field>
+        <field name="model">documents.workflow.rule</field>
+		<field name="inherit_id" ref="documents.workflow_rule_form_view"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='activity_option']" position="after">
+				<field name="ecert_valid" />
+				<field name="ecert_bpmn" attrs="{'invisible': [('ecert_valid','=',False)]}" />
+				<field name="ecert_interface" attrs="{'invisible': [('ecert_valid','=',False)]}" />
+			</xpath>
+		</field>
+	</record>
+</odoo>
