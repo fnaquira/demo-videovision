@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="save_file_form_view" model="ir.ui.view">
+            <field name="name">wizard.file.save.form</field>
+            <field name="model">wizard.file_save</field>
+            <field name="arch" type="xml">
+                <form string="Exportar Archivos" version="11.0">
+                    <field name="output_name" invisible="1"/>
+                    <div >
+                        <h2>Exportacion Completa</h2>
+                        <p>Aqui esta el archivo exportado: <field name="output_file" readonly="1" filename="output_name"/></p>
+                        <p>Este archivo fue exportado usando las especificaciones solicitadas.</p> 
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
